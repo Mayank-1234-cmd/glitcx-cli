@@ -59,6 +59,24 @@ elif [[ $1 == "-uninstall" ]] ; then
 elif [[ $1 == "-secure-npm" ]] ; then
   npm install $2
   npm audit fix
+  export PATH=$PATH:$HOME/.local/bin:/usr/local/bin
+  npm install $2
+  npm audit fix
+  npm shrinkwrap
+  npm install npm@latest -g
+  clear
+  snyk wizard
+  z="coffescript typescript loadash react chalk request urllib2 commander moment express tslib react-dom axios webpack colors jquery node babel"
+  if [[ "$2" == *"$z"* ]]; then
+    echo ""
+  else
+    echo "package may be insecure"
+  fi
+elif [[ $1 == "-installdeps" ]] ; then
+  pip install pip-safe && npm install npm@latest -g
+elif [[ $1 == "-secure-pip" ]] ; then
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py
+  pip-safe install $2 --verbose
 elif [[ $1 == "-help" ]] ; then
   echo '-clone_link link foldername imports from a folder';
   echo '-edit file                  the worst shell editor';
@@ -75,4 +93,6 @@ elif [[ $1 == "-help" ]] ; then
   echo 'Package managers (dont work yet)'
   echo '-secure-npm package         securely install from NPM'
   echo '-secure-pip package         securely install from PIP'
+  echo 'Install dependencies that may not be installed via'
+  echo './glitch-bleeding-edge.sh -installdeps'
 fi
